@@ -28,14 +28,15 @@ export default function HeaderCont({ name }) {
         <Avatar
           alt="Gravis Howard"
           src={logo}
-          sx={{ width: { xs: 32, md: 48 }, height: { xs: 32, md: 48 } }}
+          variant="square"
+          sx={{ width: { xs: 32, md: 45 }, height: { xs: 32, md: 45 } , }}
         />
         <Typography
           variant="h5"
           sx={{
             fontFamily: '"Sansita", serif',
-            fontSize: { xs: "24px", md: "33px" },
-            marginTop: { xs: "0", md: "5px" },
+            fontSize: { xs: "24px", md: "42px" },
+            marginTop: { xs: "0", md: "-5px" },
           }}
         >
           TeamFlow

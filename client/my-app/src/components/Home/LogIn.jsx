@@ -136,7 +136,7 @@ export default function ManagerComponent() {
                   onChange={(e) => setUserid(e.target.value)}
                 />
                 <TextField
-                  label="Enter Padssword"
+                  label="Enter Password"
                   type="password"
                   variant="standard"
                   fullWidth
