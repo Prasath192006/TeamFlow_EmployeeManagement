@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import dayjs from "dayjs";
 import HeaderCont from "../HeaderCont.jsx";
 import Footer from "../Footer.jsx";
@@ -27,10 +27,14 @@ export default function Manager() {
   const [pageEMP, setPageEMP] = useState(0);
   const [rowsPerPageEMP, setRowsPerPageEMP] = useState(5);
   const navigate = useNavigate();
-  const { userID } = useParams();
+  const  {userID} = useParams();
 
+  
   const userData = Tempdata.find((id) => id.userid === userID);
-
+  if (!userData) {
+    console.log(userID,"sds")
+    return <Typography>User not found.</Typography>;
+  }
   const [completedTasks, setCompletedTasks] = useState(
     Tempdata.filter(
       (empl) => empl.TaskStatus === "Completed" && empl.task !== "nil"
@@ -66,14 +70,16 @@ export default function Manager() {
         bgcolor: "#01123eeb",
         color: "aliceblue",
         minHeight: "100vh",
+        pb:"10rem",
+        mb: "-2rem",
       }}
       >
-      <HeaderCont name={userData.name} />
+     
 
       <Grid
         container
         spacing={2}
-        sx={{ p: { xs: 2, md: 4 }, mt: 2, border: "1px solid white" }}
+        sx={{ p: { xs: 2, md: 4 }, mt:0 , border: "1px solid white" }}
       >
         <Grid
           item
@@ -107,14 +113,14 @@ export default function Manager() {
             <Button
               fullWidth
               variant="contained"
-              onClick={() => navigate(`/Manager/AddEmployee/${userData.name}`)}
+              onClick={() => navigate("AddEmployee")}
             >
               ADD EMPLOYEE
             </Button>
             <Button
               fullWidth
               variant="contained"
-              onClick={() => navigate(`/Manager/AssignTask/${userData.name}`)}
+              onClick={() => navigate("AssignTask")}
             >
               Assign Task
             </Button>
@@ -136,7 +142,7 @@ export default function Manager() {
         <Table>
           <TableHead>
             <TableRow>
-              {["Sno", "Name", "Task", "Completed Time", "Check", "Verify"].map(
+              {["Sno", "Name", "Task", "Assigned ON","Completed Time", "Check"].map(
                 (head) => (
                   <TableCell
                     key={head}
@@ -163,13 +169,14 @@ export default function Manager() {
                   </TableCell>
                   <TableCell align="center">{empl.name}</TableCell>
                   <TableCell align="center">{empl.task}</TableCell>
+                  <TableCell align="center">{empl.assignedON}</TableCell>
                   <TableCell align="center">{empl.workCompletedTime}</TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" color="success" fullWidth>
+                    <Button variant="contained" color="success" fullWidth onClick={()=>navigate("CheckTask")}>
                       CHECK
                     </Button>
                   </TableCell>
-                  <TableCell align="center">
+                  {/* <TableCell align="center">
                     <Button
                       variant="contained"
                       fullWidth
@@ -177,7 +184,7 @@ export default function Manager() {
                     >
                       VERIFIED
                     </Button>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
           </TableBody>
@@ -196,7 +203,7 @@ export default function Manager() {
       <Typography
         variant="h4"
         textAlign="center"
-        sx={{ my: { xs: 3, md: 5 }, fontFamily: '"Sansita", serif' }}
+        sx={{ my: { xs: 3, md: 7 }, fontFamily: '"Sansita", serif' }}
       >
         Employee Status
       </Typography>
@@ -267,7 +274,7 @@ export default function Manager() {
          />
       </TableContainer>
 
-      <Footer />
+     
     </Box>
   );
 }

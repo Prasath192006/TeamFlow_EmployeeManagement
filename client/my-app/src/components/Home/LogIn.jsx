@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
 import { Tempdata } from "../../App";
 
+
 export default function ManagerComponent() {
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
@@ -26,8 +27,8 @@ export default function ManagerComponent() {
     const data = getData(userid);
     if (data && data.passkey === password) {
       data.userid.startsWith("M")
-        ? navigate(`/LogedIn/Manager/${userid}`)
-        : navigate(`/LogedIn/Employee/${userid}`);
+        ? navigate(`/Manager/${userid}`)
+        : navigate(`/Employee/${userid}`);
     }
   };
 
@@ -142,6 +143,9 @@ export default function ManagerComponent() {
                   fullWidth
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <Typography sx={{fontSize:"0.8rem" ,  color:"#ffca28" }}>
+                  If you are a new User please contact your Admin/Manager
+                </Typography>
               </Box>
 
               <Button
@@ -149,7 +153,7 @@ export default function ManagerComponent() {
                 fullWidth
                 onClick={handleLogin}
                 sx={{
-                  mt: {xs:4 , md:6},
+                  mt: {xs:1 , md:2},
                   color: "white",
                   backgroundColor: "blue",
                   fontWeight: "bold",
@@ -163,6 +167,8 @@ export default function ManagerComponent() {
           </Box>
         </Grid>
       </Grid>
+    
     </Box>
+   
   );
 }

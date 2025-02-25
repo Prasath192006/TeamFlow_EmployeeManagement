@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import HeaderCont from "../HeaderCont.jsx";
-import { useParams } from "react-router-dom";
 import Footer from "../Footer.jsx";
 import {
   Paper,
@@ -14,15 +13,14 @@ import {
   Grid,
   InputAdornment,
   IconButton,
+  Avatar,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function AddEmpl() {
-  const { name } = useParams();
-
   const [formData, setFormData] = useState({
     fname: "",
-    lname: "",
+    profilePic: null,
     email: "",
     address: "",
     emprole: "",
@@ -30,17 +28,19 @@ export default function AddEmpl() {
     password: "",
     Conpassword: "",
   });
+  const [Preview, setPreview] = useState(null);
 
   const [verification, setVerification] = useState({
     verifyEmail: false,
     verifyPass: false,
+    verifyEmpID:false,
   });
 
   const [showPass, setShowPass] = useState(false);
   const [showConPass, setShowConPass] = useState(false);
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
+  const validateEmpID = (empid) => /^TF\d{2}[ME]\d{4}$/.test(empid);
   const handleFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -59,13 +59,20 @@ export default function AddEmpl() {
         verifyPass: formData.password !== value,
       }));
     }
+    if(name === "empid" && value){
+    setVerification((prev)=>({
+      ...prev,
+      verifyEmpID:!validateEmpID(value),
+    }))
+    }
   };
 
   const resetForm = () => {
     setFormData({
       fname: "",
-      lname: "",
+      profilePic: null,
       email: "",
+      Preview: null,
       address: "",
       emprole: "",
       empid: "",
@@ -82,196 +89,231 @@ export default function AddEmpl() {
       alert("Password Mismatch");
     }
   };
+ const handleEmpID = ()=>{
+
+ }
+  const handleimage = (e) => {
+    const file = e.target.files[0];
+
+    setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    setPreview(URL.createObjectURL(file));
+  };
 
   return (
-    <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh", }}>
-      <HeaderCont name={name} />
+    <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh", pb: "8rem" }}>
       <Box
         component="h2"
         sx={{
           color: "aliceblue",
           textAlign: "center",
-          mb: "2vw",
+          pt: "2rem",
           fontFamily: '"Sansita", serif',
           fontSize: { xs: "28px", md: "40px" },
+          mb: "2rem",
         }}
       >
         Add Employee
       </Box>
-     <Box>
-      <Paper
-        elevation={3}
-        sx={{
-          m: "2vw auto",
-          width: {xs:"90%" , md:"60%"},
-          maxWidth: "1200px",
-          backgroundColor: "rgb(243 248 253)",
-          color: "#061523",
-          px: "2vw",
-          py:"4vw",
-          borderRadius: "12px",
-        }}
-      >
-        <FormControl fullWidth>
-          <Grid container spacing={5} >
-            <Grid item xs={12} md={6} spacing={10}>
-              <Box sx={{display:"flex" ,flexDirection:"column", gap:"20px"}}>
-              <TextField
-                fullWidth
-                label="First Name"
-                name="fname"
-                value={formData.fname}
-                onChange={handleFormData}
-                placeholder="Enter First Name"
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-              />
-              <TextField
-                fullWidth
-                label="Last Name"
-                name="lname"
-                value={formData.lname}
-                onChange={handleFormData}
-                placeholder="Enter Last Name"
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-              />
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleFormData}
-                onBlur={handleValidation}
-                placeholder="Enter Email"
-                error={verification.verifyEmail}
-                helperText={verification.verifyEmail ? "Invalid Email" : ""}
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-              />
-              <TextField
-                fullWidth
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={handleFormData}
-                placeholder="Enter Address"
-                multiline
-                maxRows={4}
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-              />
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box sx={{display:"flex" ,flexDirection:"column", gap:"20px"}}>
-              <FormControl fullWidth sx={{ mb: "1.5vw" }}>
-                <InputLabel id="role-label">Role</InputLabel>
-                <Select
-                  labelId="role-label"
-                  name="emprole"
-                  value={formData.emprole}
-                  onChange={handleFormData}
-                  label="Role"
+      <Box>
+        <Paper
+          elevation={3}
+          sx={{
+            m: "0vw auto",
+            width: { xs: "90%", md: "60%" },
+            maxWidth: "1200px",
+            backgroundColor: "rgb(243 248 253)",
+            color: "#061523",
+            px: "2vw",
+            py: "4vw",
+            borderRadius: "12px",
+          }}
+        >
+          <FormControl fullWidth>
+          <Avatar
+                    src={Preview}
+                    alt="Profile Preview"
+                    sx={{ width: 140, height: 140, margin: "auto" ,mb:"3rem" }}
+                  />
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={6} spacing={10}>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
                 >
-                  {[
-                    "Technical Engineer",
-                    "Frontend Developer",
-                    "Figma Designer",
-                    "Backend Developer",
-                    "Database Manager",
-                  ].map((role) => (
-                    <MenuItem key={role} value={role}>
-                      {role}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  <TextField
+                    fullWidth
+                    label=" Name"
+                    name="fname"
+                    value={formData.fname}
+                    onChange={handleFormData}
+                    placeholder="Enter First Name"
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
+                  />
+                   {/* { EMAIL} */}
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleFormData}
+                    onBlur={handleValidation}
+                    placeholder="Enter Email"
+                    error={verification.verifyEmail}
+                    helperText={verification.verifyEmail ? "Invalid Email" : ""}
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
+                  />
+                 
+                
+                      {/* //ADDRESS */}
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleFormData}
+                    placeholder="Enter Address"
+                    multiline
+                    maxRows={4}
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
+                  />
+                    <input
+                    type="file"
+                    name="profilePic"
+                    style={{ display: "none" }}
+                    onChange={handleimage}
+                    id="profile-pic"
+                  />
+                  <label htmlFor="profile-pic">
+                    <Button variant="contained" component="span">
+                      Choose Profile Photo
+                    </Button>
+                  </label>
+                </Box>
+              </Grid>
 
-              <TextField
-                fullWidth
-                label="Employee ID"
-                name="empid"
-                value={formData.empid}
-                onChange={handleFormData}
-                placeholder="Enter Employee ID"
-                helperText="Must be unique"
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-              />
+              <Grid item xs={12} md={6}>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
+                >
+                  <FormControl fullWidth sx={{ mb: "1.5vw" }}>
+                    <InputLabel id="role-label">Role</InputLabel>
+                    <Select
+                      labelId="role-label"
+                      name="emprole"
+                      value={formData.emprole}
+                      onChange={handleFormData}
+                      label="Role"
+                    >
+                      {[
+                        "Technical Engineer",
+                        "Frontend Developer",
+                        "Figma Designer",
+                        "Backend Developer",
+                        "Database Manager",
+                      ].map((role) => (
+                        <MenuItem key={role} value={role}>
+                          {role}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type={showPass ? "text" : "password"}
-                value={formData.password}
-                onChange={handleFormData}
-                placeholder="Enter Password"
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPass((prev) => !prev)}>
-                        {showPass ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                    {/* EMPLOYEE ID */}
 
-              <TextField
-                fullWidth
-                label="Confirm Password"
-                name="Conpassword"
-                type={showConPass ? "text" : "password"}
-                value={formData.Conpassword}
-                onChange={handleFormData}
-                onBlur={handleValidation}
-                placeholder="Re-enter Password"
-                error={verification.verifyPass}
-                helperText={verification.verifyPass ? "Password Mismatch" : ""}
-                variant="outlined"
-                sx={{ mb: "1.5vw" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowConPass((prev) => !prev)}
-                      >
-                        {showConPass ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              </Box>
+                  <TextField
+                    fullWidth
+                    label="Employee ID"
+                    name="empid"
+                    error={verification.verifyEmpID  }
+                    value={formData.empid}
+                    onChange={handleFormData}
+                    placeholder="Enter Employee ID"
+                    onBlur={handleValidation}
+                    helperText={verification.verifyEmpID?"Incorrect Format e.g`TF2XE4XXX`":"Must be unique"}
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    name="password"
+                    type={showPass ? "text" : "password"}
+                    value={formData.password}
+                    onChange={handleFormData}
+                    placeholder="Enter Password"
+                    variant="outlined"
+                    sx={{ mb: "1.5vw", mt:"-1.5rem"}}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPass((prev) => !prev)}
+                          >
+                            {showPass ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Confirm Password"
+                    name="Conpassword"
+                    type={showConPass ? "text" : "password"}
+                    value={formData.Conpassword}
+                    onChange={handleFormData}
+                    onBlur={handleValidation}
+                    placeholder="Re-enter Password"
+                    error={verification.verifyPass}
+                    helperText={
+                      verification.verifyPass ? "Password Mismatch" : ""
+                    }
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowConPass((prev) => !prev)}
+                          >
+                            {showConPass ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              mt: "2vw",
-              gap: {xs:"5vw" , md:"2vw"},
-            }}
-           >
-            <Button variant="outlined" color="primary" onClick={resetForm}>
-              Reset
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Create Employee
-            </Button>
-          </Box>
-        </FormControl>
-      </Paper>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                mt: "2vw",
+                gap: { xs: "5vw", md: "2vw" },
+              }}
+            >
+              <Button variant="outlined" color="primary" onClick={resetForm}>
+                Reset
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Create Employee
+              </Button>
+            </Box>
+          </FormControl>
+        </Paper>
       </Box>
-      <Footer />
     </Box>
   );
 }

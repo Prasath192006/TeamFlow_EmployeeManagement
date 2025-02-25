@@ -3,7 +3,8 @@ import { Avatar, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import logo from "../images/logo.png";
 
-export default function HeaderCont({ name }) {
+export default function HeaderCont(props)
+{ const name = props.name; 
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -54,7 +55,7 @@ export default function HeaderCont({ name }) {
         <Typography
           sx={{
             fontFamily: '"Sansita", serif',
-            fontSize: { xs: "18px", md: "30px" },
+            fontSize: { xs: "18px", md: "35px" },
             display: { xs: "none", sm: "block" }, 
           }}
         >

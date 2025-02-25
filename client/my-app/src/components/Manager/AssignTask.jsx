@@ -15,7 +15,7 @@ export default function AssignTask() {
   const [empid, setEmpid] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDesc, setTaskDesc] = useState("");
-  const { name } = useParams();
+
   const [selectedDate, setSelectedDate] = useState(dayjs().add(1, "day"));
 
   const addItem = () => {
@@ -41,15 +41,13 @@ export default function AssignTask() {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh" }}>
-      <HeaderCont name={name} />
-
+    <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh" , pb:"13vh"}}>
       <Typography
         variant="h3"
         align="center"
         sx={{
           color: "aliceblue",
-          mt: { xs: "4vh", md: "2vh" },
+
           mb: { xs: "6vh", md: "4vh" },
           fontFamily: '"Sansita", serif',
           fontSize: "clamp(30px, 5vw, 45px)",
@@ -71,8 +69,8 @@ export default function AssignTask() {
           sx={{
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
-            gap: {xs:"8vw ",md:"4vw"},
-            mb: {xs:"8vw ",md:"4vw"},
+            gap: { xs: "8vw ", md: "4vw" },
+            mb: { xs: "8vw ", md: "4vw" },
           }}
         >
           <TextField
@@ -98,16 +96,16 @@ export default function AssignTask() {
           maxRows={6}
           value={taskDesc}
           onChange={(e) => setTaskDesc(e.target.value)}
-          sx={{ width: "100%",  mb: {xs:"8vw ",md:"4vw"} }}
+          sx={{ width: "100%", mb: { xs: "8vw ", md: "4vw" } }}
         />
 
         <Box
           sx={{
             display: "flex",
-            flexDirection: {xs:"column" , md:"row" },
+            flexDirection: { xs: "column", md: "row" },
             alignItems: "center",
             gap: "2vw",
-            mb: {xs:"8vw ",md:"4vw"}
+            mb: { xs: "8vw ", md: "4vw" },
           }}
         >
           <TextField
@@ -134,13 +132,20 @@ export default function AssignTask() {
               width: "100%",
               borderCollapse: "separate",
               borderSpacing: "1vw",
-              mb: {xs:"8vw ",md:"4vw"}
+              mb: { xs: "8vw ", md: "4vw" },
             }}
           >
             <tbody>
               {items.map((item, index) => (
                 <Box component="tr" key={index} sx={{ width: "100%" }}>
-                  <Box component="td" sx={{ padding: "10px", width: "70%"  , wordBreak: "break-word",}}>
+                  <Box
+                    component="td"
+                    sx={{
+                      padding: "10px",
+                      width: "70%",
+                      wordBreak: "break-word",
+                    }}
+                  >
                     {item}
                   </Box>
                   <Box component="td">
@@ -163,7 +168,7 @@ export default function AssignTask() {
           <Box
             sx={{
               display: "flex",
-             
+
               alignItems: "center",
               gap: "1vw",
               mb: "4vh",
@@ -193,7 +198,6 @@ export default function AssignTask() {
           </Button>
         </Box>
       </Paper>
-      <Footer />
     </Box>
   );
 }
