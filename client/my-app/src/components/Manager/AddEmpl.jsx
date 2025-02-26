@@ -22,6 +22,7 @@ export default function AddEmpl() {
     fname: "",
     profilePic: null,
     email: "",
+    salary:"",
     address: "",
     emprole: "",
     empid: "",
@@ -72,6 +73,7 @@ export default function AddEmpl() {
       fname: "",
       profilePic: null,
       email: "",
+      salary:"",
       Preview: null,
       address: "",
       emprole: "",
@@ -129,11 +131,32 @@ export default function AddEmpl() {
           }}
         >
           <FormControl fullWidth>
-          <Avatar
+            <Box
+            display="flex"
+            justifyContent="center" 
+            alignItems="center"
+            flexDirection={"column"}
+            mb={"3rem"}
+             >
+            <Avatar
                     src={Preview}
                     alt="Profile Preview"
-                    sx={{ width: 140, height: 140, margin: "auto" ,mb:"3rem" }}
+                    sx={{ width: 140, height: 140, mb:"2rem" }}
                   />
+                    <input
+                    type="file"
+                    name="profilePic"
+                    style={{ display: "none" }}
+                    onChange={handleimage}
+                    id="profile-pic"
+                  />
+                  <label htmlFor="profile-pic">
+                    <Button variant="contained" component="span" sx={{ mb: "1vw",alignItems:"center" }}>
+                      Choose Profile Photo
+                    </Button>
+                  </label>
+            </Box>
+        
             <Grid container spacing={5}>
               <Grid item xs={12} md={6} spacing={10}>
                 <Box
@@ -179,18 +202,21 @@ export default function AddEmpl() {
                     variant="outlined"
                     sx={{ mb: "1.5vw" }}
                   />
-                    <input
-                    type="file"
-                    name="profilePic"
-                    style={{ display: "none" }}
-                    onChange={handleimage}
-                    id="profile-pic"
+                   <TextField
+                    fullWidth
+                    label="Salary"
+                    name="salary"
+                    type="number"
+                    value={formData.salary}
+                    onChange={handleFormData}
+                    onBlur={handleValidation}
+                    placeholder="Enter Salary"
+                   
+                    variant="outlined"
+                    sx={{ mb: "1.5vw" }}
                   />
-                  <label htmlFor="profile-pic">
-                    <Button variant="contained" component="span">
-                      Choose Profile Photo
-                    </Button>
-                  </label>
+                  
+                 
                 </Box>
               </Grid>
 
