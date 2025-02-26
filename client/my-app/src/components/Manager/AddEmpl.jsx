@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HeaderCont from "../HeaderCont.jsx";
 import Footer from "../Footer.jsx";
+import axios from "axios"
 import {
   Paper,
   Box,
@@ -84,13 +85,7 @@ export default function AddEmpl() {
     setVerification({ verifyEmail: false, verifyPass: false });
   };
 
-  const handleSubmit = () => {
-    if (formData.password === formData.Conpassword) {
-      alert("Added Successfully");
-    } else {
-      alert("Password Mismatch");
-    }
-  };
+  
  const handleEmpID = ()=>{
 
  }
@@ -101,6 +96,34 @@ export default function AddEmpl() {
     setPreview(URL.createObjectURL(file));
   };
 
+  // SERVER CODE
+ 
+  const handleSubmit = async(e) => {
+    const formdata = new FormData();
+    formdata.append("name", formData.fname);
+    formdata.append("email", formData.email);
+    formdata.append("password", formData.password);
+    formdata.append("userID", formData.empid);
+    formdata.append("role", formData.emprole);
+    formdata.append("address", formData.address);
+    formdata.append("salary", formData.salary);
+    formdata.append("image", formData.profilePic); 
+    
+    axios.post("http://localhost:5000/api/LogIN/AddUser",formdata,{
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res)=>{
+        console.log("dfvd",res.data.message)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
+
+
+
+  };
+  
   return (
     <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh", pb: "8rem" }}>
       <Box
