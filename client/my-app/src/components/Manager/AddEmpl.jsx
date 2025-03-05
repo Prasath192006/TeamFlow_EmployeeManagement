@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderCont from "../HeaderCont.jsx";
 import Footer from "../Footer.jsx";
-import axios from "axios"
+import axios from "axios";
 import {
   Paper,
   Box,
@@ -23,7 +23,7 @@ export default function AddEmpl() {
     fname: "",
     profilePic: null,
     email: "",
-    salary:"",
+    salary: "",
     address: "",
     emprole: "",
     empid: "",
@@ -32,10 +32,22 @@ export default function AddEmpl() {
   });
   const [Preview, setPreview] = useState(null);
 
-  const [verification, setVerification] = useState({
+  const [errorMSG, seterrorMSG] = useState({
+    emailerr: "Invalid Email",
+    emailerrcolor: "#D84040",
+    useriderr: "Incorrect Format e.g`TF2XE4XXX`",
+    useriderrcolor: "#D84040",
+  });
+
+  const [verify, setverify] = useState({
+    email: false,
+    userid: false,
+  });
+
+  const [formatverification, setformatverification] = useState({
     verifyEmail: false,
     verifyPass: false,
-    verifyEmpID:false,
+    verifyEmpID: false,
   });
 
   const [showPass, setShowPass] = useState(false);
@@ -49,23 +61,60 @@ export default function AddEmpl() {
 
   const handleValidation = (e) => {
     const { name, value } = e.target;
-    if (name === "email" && value) {
-      setVerification((prev) => ({
+
+    if (name === "email") {
+      seterrorMSG((prev) => ({
         ...prev,
-        verifyEmail: !validateEmail(value),
+        emailerrcolor: "#E50046",
       }));
+      setverify((prev) => ({
+        ...prev,
+        email: false,
+      }));
+      const emailVerify = validateEmail(value);
+      if (!emailVerify) {
+        seterrorMSG((prev) => ({ ...prev, emailerr: "Invalid Email" }));
+      }
+
+      setformatverification((prev) => ({
+        ...prev,
+        verifyEmail: value !== "" ? !emailVerify : false,
+      }));
+      if (emailVerify) {
+        isemailexist();
+      }
     }
     if (name === "Conpassword" && value) {
-      setVerification((prev) => ({
+      setformatverification((prev) => ({
         ...prev,
         verifyPass: formData.password !== value,
       }));
     }
-    if(name === "empid" && value){
-    setVerification((prev)=>({
-      ...prev,
-      verifyEmpID:!validateEmpID(value),
-    }))
+    if (name === "empid") {
+      const useridverify = validateEmpID(value);
+      seterrorMSG((prev) => ({
+        ...prev,
+        useriderrcolor: "#E50046",
+      }));
+      setverify((prev) => ({
+        ...prev,
+        userid: false,
+      }));
+      console.log("usrisd:value", useridverify, value);
+      if (!useridverify) {
+        seterrorMSG((prev) => ({
+          ...prev,
+          useriderr: "Incorrect Format e.g`TF2XE4XXX`",
+        }));
+      }
+
+      setformatverification((prev) => ({
+        ...prev,
+        verifyEmpID: value !== "" ? !useridverify : false,
+      }));
+      if (useridverify) {
+        isuseridexist();
+      }
     }
   };
 
@@ -74,7 +123,7 @@ export default function AddEmpl() {
       fname: "",
       profilePic: null,
       email: "",
-      salary:"",
+      salary: "",
       Preview: null,
       address: "",
       emprole: "",
@@ -82,13 +131,9 @@ export default function AddEmpl() {
       password: "",
       Conpassword: "",
     });
-    setVerification({ verifyEmail: false, verifyPass: false });
+    setformatverification({ verifyEmail: false, verifyPass: false });
   };
 
-  
- const handleEmpID = ()=>{
-
- }
   const handleimage = (e) => {
     const file = e.target.files[0];
 
@@ -97,8 +142,8 @@ export default function AddEmpl() {
   };
 
   // SERVER CODE
- 
-  const handleSubmit = async(e) => {
+
+  const handleSubmit = async (e) => {
     const formdata = new FormData();
     formdata.append("name", formData.fname);
     formdata.append("email", formData.email);
@@ -107,23 +152,71 @@ export default function AddEmpl() {
     formdata.append("role", formData.emprole);
     formdata.append("address", formData.address);
     formdata.append("salary", formData.salary);
-    formdata.append("image", formData.profilePic); 
-    
-    axios.post("http://localhost:5000/api/LogIN/AddUser",formdata,{
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-    .then((res)=>{
-        console.log("dfvd",res.data.message)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+    formdata.append("image", formData.profilePic);
 
-
-
-
+    axios
+      .post("http://localhost:5000/api/LogIN/AddUser", formdata, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  
+
+  const isemailexist = async () => {
+    console.log("isemailexist called");
+    axios
+      .get("http://localhost:5000/api/LogIN/isemailexist", {
+        params: { email: formData.email },
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (!res.data.isemailexist) {
+          seterrorMSG((prev) => ({
+            ...prev,
+            emailerrcolor: "#5CB338",
+          }));
+          setverify((prev) => ({
+            ...prev,
+            email: true,
+          }));
+        }
+        seterrorMSG((prev) => ({ ...prev, emailerr: res.data.message }));
+        setformatverification((prev) => ({
+          ...prev,
+          verifyEmail: true,
+        }));
+      });
+  };
+  const isuseridexist = async () => {
+    console.log("isuseridexist called");
+    axios
+      .get("http://localhost:5000/api/LogIN/isuseridexist", {
+        params: { userid: formData.empid },
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (!res.data.isuseridexist) {
+          seterrorMSG((prev) => ({
+            ...prev,
+            useriderrcolor: "#5CB338",
+          }));
+          setverify((prev) => ({
+            ...prev,
+            userid: true,
+          }));
+        }
+        seterrorMSG((prev) => ({ ...prev, useriderr: res.data.message }));
+        setformatverification((prev) => ({
+          ...prev,
+          verifyEmpID: true,
+        }));
+      });
+  };
+
   return (
     <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh", pb: "8rem" }}>
       <Box
@@ -155,31 +248,35 @@ export default function AddEmpl() {
         >
           <FormControl fullWidth>
             <Box
-            display="flex"
-            justifyContent="center" 
-            alignItems="center"
-            flexDirection={"column"}
-            mb={"3rem"}
-             >
-            <Avatar
-                    src={Preview}
-                    alt="Profile Preview"
-                    sx={{ width: 140, height: 140, mb:"2rem" }}
-                  />
-                    <input
-                    type="file"
-                    name="profilePic"
-                    style={{ display: "none" }}
-                    onChange={handleimage}
-                    id="profile-pic"
-                  />
-                  <label htmlFor="profile-pic">
-                    <Button variant="contained" component="span" sx={{ mb: "1vw",alignItems:"center" }}>
-                      Choose Profile Photo
-                    </Button>
-                  </label>
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              flexDirection={"column"}
+              mb={"3rem"}
+            >
+              <Avatar
+                src={Preview}
+                alt="Profile Preview"
+                sx={{ width: 140, height: 140, mb: "2rem" }}
+              />
+              <input
+                type="file"
+                name="profilePic"
+                style={{ display: "none" }}
+                onChange={handleimage}
+                id="profile-pic"
+              />
+              <label htmlFor="profile-pic">
+                <Button
+                  variant="contained"
+                  component="span"
+                  sx={{ mb: "1vw", alignItems: "center" }}
+                >
+                  Choose Profile Photo
+                </Button>
+              </label>
             </Box>
-        
+
             <Grid container spacing={5}>
               <Grid item xs={12} md={6} spacing={10}>
                 <Box
@@ -195,9 +292,10 @@ export default function AddEmpl() {
                     variant="outlined"
                     sx={{ mb: "1.5vw" }}
                   />
-                   {/* { EMAIL} */}
+                  {/* { EMAIL} */}
                   <TextField
                     fullWidth
+                    autoComplete="off"
                     label="Email"
                     name="email"
                     type="email"
@@ -205,14 +303,20 @@ export default function AddEmpl() {
                     onChange={handleFormData}
                     onBlur={handleValidation}
                     placeholder="Enter Email"
-                    error={verification.verifyEmail}
-                    helperText={verification.verifyEmail ? "Invalid Email" : ""}
+                    //error={formatverification.verifyEmail}
+                    helperText={
+                      formatverification.verifyEmail ? errorMSG.emailerr : ""
+                    }
                     variant="outlined"
-                    sx={{ mb: "1.5vw" }}
+                    sx={{
+                      mb: "1.5vw",
+                      "& .MuiFormHelperText-root": {
+                        color: errorMSG.emailerrcolor,
+                      },
+                    }}
                   />
-                 
-                
-                      {/* //ADDRESS */}
+
+                  {/* //ADDRESS */}
                   <TextField
                     fullWidth
                     label="Address"
@@ -225,7 +329,7 @@ export default function AddEmpl() {
                     variant="outlined"
                     sx={{ mb: "1.5vw" }}
                   />
-                   <TextField
+                  <TextField
                     fullWidth
                     label="Salary"
                     name="salary"
@@ -234,12 +338,9 @@ export default function AddEmpl() {
                     onChange={handleFormData}
                     onBlur={handleValidation}
                     placeholder="Enter Salary"
-                   
                     variant="outlined"
                     sx={{ mb: "1.5vw" }}
                   />
-                  
-                 
                 </Box>
               </Grid>
 
@@ -270,20 +371,30 @@ export default function AddEmpl() {
                     </Select>
                   </FormControl>
 
-                    {/* EMPLOYEE ID */}
+                  {/* EMPLOYEE ID */}
 
                   <TextField
                     fullWidth
                     label="Employee ID"
+                    autoComplete="off"
                     name="empid"
-                    error={verification.verifyEmpID  }
+                    //error={formatverification.verifyEmpID  }
                     value={formData.empid}
                     onChange={handleFormData}
                     placeholder="Enter Employee ID"
                     onBlur={handleValidation}
-                    helperText={verification.verifyEmpID?"Incorrect Format e.g`TF2XE4XXX`":"Must be unique"}
+                    helperText={
+                      formatverification.verifyEmpID
+                        ? errorMSG.useriderr
+                        : "Must be unique"
+                    }
                     variant="outlined"
-                    sx={{ mb: "1.5vw" }}
+                    sx={{
+                      mb: "1.5vw",
+                      "& .MuiFormHelperText-root": {
+                        color: errorMSG.useriderrcolor,
+                      },
+                    }}
                   />
 
                   <TextField
@@ -295,7 +406,7 @@ export default function AddEmpl() {
                     onChange={handleFormData}
                     placeholder="Enter Password"
                     variant="outlined"
-                    sx={{ mb: "1.5vw", mt:"-1.5rem"}}
+                    sx={{ mb: "1.5vw", mt: "-1.5rem" }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -318,9 +429,9 @@ export default function AddEmpl() {
                     onChange={handleFormData}
                     onBlur={handleValidation}
                     placeholder="Re-enter Password"
-                    error={verification.verifyPass}
+                    error={formatverification.verifyPass}
                     helperText={
-                      verification.verifyPass ? "Password Mismatch" : ""
+                      formatverification.verifyPass ? "Password Mismatch" : ""
                     }
                     variant="outlined"
                     sx={{ mb: "1.5vw" }}
@@ -356,7 +467,9 @@ export default function AddEmpl() {
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
+                disabled={!Object.values(verify).every((val) => val)}
               >
+                {console.log(Object.values(verify))}
                 Create Employee
               </Button>
             </Box>
