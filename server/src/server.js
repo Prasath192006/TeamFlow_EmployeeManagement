@@ -5,19 +5,19 @@ const AddUser = require("./User/AddUser.routes");
 
 
 const app = express();
-
+ 
 
 //middleware
 app.use(express.json())
 app.use(cors())
 
 //mongoose
-mongoose.connect("mongodb://localhost:27017/UserDetails")
+mongoose.connect("mongodb+srv://EmployeeManagementTeamFlow:tf%4012345@c0.t9ucf.mongodb.net/UserDetails?retryWrites=true&w=majority&appName=C0")
 .then(() => {
     console.log("MongoDB connected successfully");
   })
-  .catch(() => {
-    console.log("connection failed");
+  .catch((err) => {
+    console.log("connection failed",err);
   });
 
 
@@ -28,7 +28,7 @@ app.use("/api/LogIN",AddUser)
 
 
 
-
+ 
 app.listen(5000,()=>{
     console.log("Server running at PORT:5000")
 })

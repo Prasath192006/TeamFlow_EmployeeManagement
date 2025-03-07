@@ -23,12 +23,16 @@ const addUserSchema = mongoose.Schema(
         salary:{
             type:Number
         },
-        image:{
-            data:Buffer,
-            contentType:String
+        image: {
+            type: {
+                data: Buffer,
+                contentType: String
+            },
+            default: null 
         }
+
     },{
-        timestamps:true,
+        timestamps:true, 
         collection: "UserData",
     }
 

@@ -160,6 +160,7 @@ export default function AddEmpl() {
       })
       .then((res) => {
         console.log(res.data.message);
+        alert("Added Successfully!!!");
       })
       .catch((err) => {
         console.log(err);
@@ -363,6 +364,7 @@ export default function AddEmpl() {
                         "Figma Designer",
                         "Backend Developer",
                         "Database Manager",
+                        "Manager",
                       ].map((role) => (
                         <MenuItem key={role} value={role}>
                           {role}

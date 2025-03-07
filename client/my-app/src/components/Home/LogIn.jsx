@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import {
   Box,
@@ -20,16 +21,64 @@ export default function ManagerComponent() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-
+  
   const getData = (userId) => Tempdata.find((it) => it.userid === userId);
+//server side code
 
-  const handleLogin = () => {
-    const data = getData(userid);
-    if (data && data.passkey === password) {
-      data.userid.startsWith("M")
-        ? navigate(`/Manager/${userid}`)
-        : navigate(`/Employee/${userid}`);
-    }
+const [handleErr,sethandleErr] = useState({
+  useridErr:false,
+  useridErrMsg:"",
+  passErr:false,
+  passErrMsg:""
+})
+const resetHandleErr = ()=>{
+  sethandleErr((prev)=>({
+    ...prev,
+    useridErr:false,
+    useridErrMsg:"",
+    passErr:false,
+    passErrMsg:""
+  }))
+}
+
+  const handleLogin = async() => {
+    navigate(`/Manager/${"M25TF09"}`)
+    const formdata = new FormData();
+    formdata.append("userid",userid)
+    formdata.append("password",password)
+
+    await axios.get("http://localhost:5000/api/LogIN/",{
+      params:{userid:userid,password:password}
+    })
+    .then((res)=>{
+      console.log("Authenticated ",res.data.message);
+      userid[4] === 'M'
+      ? navigate(`/Manager/${"M25TF09"}`)
+      : navigate(`/Employee/${"E25TF05"}`);
+    })
+    .catch((err) => {
+      if (err.response) {  
+        console.log(err.response.data.message)
+        const errType = err.response.data.errfrom;
+        if(errType === "userid"){
+           sethandleErr((prev)=>({
+            ...prev,
+            useridErr:true,
+            useridErrMsg:err.response.data.message,
+           }))
+        }else if(errType === "password"){
+          sethandleErr((prev)=>({
+            ...prev,
+            passErr:true,
+             passErrMsg:err.response.data.message
+           }))
+        }
+      }
+  });
+    
+   
+        
+  
   };
 
   return (
@@ -100,7 +149,7 @@ export default function ManagerComponent() {
                 color: "aliceblue",
                 boxShadow: "5px 5px 20px rgba(255, 255, 255, 0.5)",
                 width: { xs: "90vw",md: "23vw"},
-                height:{xs:"" , md:"28vw"},
+                height:{xs:"" , md:"31vw"},
                 transition: "transform 0.4s ease",
                 transform: isHovered ? "scale(1.1)" : "scale(1)",
               }}
@@ -123,7 +172,7 @@ export default function ManagerComponent() {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: 3,
+                  gap: 5,
                   mt: 3,
                   '& .MuiInputBase-input': { color: "aliceblue" },
                   '& .MuiInputLabel-root': { color: "aliceblue" },
@@ -134,14 +183,18 @@ export default function ManagerComponent() {
                   label="Enter User ID"
                   variant="standard"
                   fullWidth
-                  onChange={(e) => setUserid(e.target.value)}
+                  onChange={(e) => {setUserid(e.target.value),resetHandleErr()}}
+                  error={handleErr.useridErr}
+                  helperText={handleErr.useridErr?handleErr.useridErrMsg:""}
                 />
                 <TextField
                   label="Enter Password"
                   type="password"
                   variant="standard"
                   fullWidth
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {setPassword(e.target.value),resetHandleErr()}}
+                  error={handleErr.passErr}
+                  helperText={handleErr.passErr?handleErr.passErrMsg:""}
                 />
                 <Typography sx={{fontSize:"0.8rem" ,  color:"#ffca28" }}>
                   If you are a new User please contact your Admin/Manager
