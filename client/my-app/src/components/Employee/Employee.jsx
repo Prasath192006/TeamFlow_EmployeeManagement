@@ -20,9 +20,10 @@ import { GridOff } from "@mui/icons-material";
 
 export default function Employee() {
   const { userID } = useParams();
-  const userData = Tempdata.find((id) => id.userid === userID);
-  const options = userData.checkList;
-
+  const userData = JSON.parse(localStorage.getItem("data"));
+  const usertempData = Tempdata.find((id) => id.userid === userID);
+  const options = usertempData.checkList;
+  
   const [checkStatus, setCheckStatus] = useState(
     options.reduce((acc, op) => ({ ...acc, [op]: false }), {})
   );
@@ -44,7 +45,7 @@ export default function Employee() {
         minHeight: "100vh",
       }}
     >
-      <HeaderCont name={userData.name} />
+      <HeaderCont name={usertempData.name} />
 
       {/* User Info Section */}
       <Grid
@@ -69,7 +70,7 @@ export default function Employee() {
           }}
         >
           <Avatar
-            src={sam1}
+            src={userData.image}
             alt="Profile"
             s
             sx={{ width: { xs: 100, md: 200 }, height: { xs: 100, md: 200 } }}
@@ -81,10 +82,9 @@ export default function Employee() {
             {userData.name.toUpperCase()}
           </Typography>
           <Typography variant="h6">Role: {userData.role}</Typography>
-          <Typography variant="h6">ID: {userData.userid}</Typography>
+          <Typography variant="h6">ID: {userData.userID}</Typography>
           <Typography variant="h6" sx={{ wordWrap: "break-word" }}>
-            Address: Karpagam college of engineering, Othakalmandapam,
-            Coimbatore, Tamil Nadu
+            Address:{userData.address}
           </Typography>
         </Grid>
         <Grid item md={3}></Grid>
@@ -109,7 +109,7 @@ export default function Employee() {
           padding: { xs: 2, md: 4 },
         }}
       >
-        {userData.task === "" ? (
+        {usertempData.task === "" ? (
           <Typography variant="h6" align="center">
             Contact Your MANAGER
           </Typography>
@@ -123,10 +123,10 @@ export default function Employee() {
                   fontWeight: "bold",
                 }}
               >
-                {userData.task}
+                {usertempData.task}
               </Typography>
               <Typography variant="subtitle1" sx={{ marginTop: 2 }}>
-                <strong>Description:</strong> {userData.taskDesc}
+                <strong>Description:</strong> {usertempData.taskDesc}
               </Typography>
 
               <Typography variant="subtitle1" sx={{ marginTop: 3 }}>
@@ -171,7 +171,7 @@ export default function Employee() {
                   Days Left:
                 </Typography>
                 
-                  <Timer due={userData.dueDate} />
+                  <Timer due={usertempData.dueDate} />
                 
               </Box>
             </Grid>

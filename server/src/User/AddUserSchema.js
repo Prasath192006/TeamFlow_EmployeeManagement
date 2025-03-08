@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-
+const {UserDetails} = require("../mongodbConnection.js")
 const addUserSchema = mongoose.Schema(
     {
         name:{
@@ -38,4 +38,4 @@ const addUserSchema = mongoose.Schema(
 
 )
 
-module.exports = AddUserModel = mongoose.model("AddUserModel",addUserSchema)
+module.exports = AddUserModel = UserDetails.model("AddUserModel",addUserSchema)

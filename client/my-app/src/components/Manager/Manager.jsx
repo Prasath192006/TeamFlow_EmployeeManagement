@@ -30,7 +30,7 @@ export default function Manager() {
   const  {userID} = useParams();
 
   
-  const userData = Tempdata.find((id) => id.userid === userID);
+  const userData = JSON.parse(localStorage.getItem("data"));
   if (!userData) {
     console.log(userID,"sds")
     return <Typography>User not found.</Typography>;
@@ -93,7 +93,7 @@ export default function Manager() {
         >
           <Avatar
             alt="img"
-            src={sam1}
+            src={userData.image}
             sx={{ width: { xs: 100, md: 200 }, height: { xs: 100, md: 200 } }}
           />
         </Grid>
@@ -101,11 +101,10 @@ export default function Manager() {
           <Typography variant="h4" fontWeight="bold">
             {userData.name.toUpperCase()}
           </Typography>
-          <Typography variant="h6">Role: Manager</Typography>
-          <Typography variant="h6">ID: TF27M234</Typography>
+          <Typography variant="h6">Role: {userData.role}</Typography>
+          <Typography variant="h6">ID: {userData.userID}</Typography>
           <Typography variant="h6" sx={{ wordWrap: "break-word" }}>
-            Address: Karpagam college of engineering, Othakalmandapam,
-            Coimbatore, Tamil Nadu
+            Address: {userData.address}
           </Typography>
         </Grid>
         <Grid item xs={12} md={3}>

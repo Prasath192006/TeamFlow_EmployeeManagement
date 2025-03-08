@@ -4,11 +4,15 @@ import { useNavigate } from "react-router-dom";
 import logo from "../images/logo.png";
 
 export default function HeaderCont(props)
-{ const name = props.name; 
+{ 
+  
+  const storedData = JSON.parse(localStorage.getItem("data"));
+  const name = storedData.name; 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     navigate("/", { replace: true });
+    localStorage.clear();
   };
 
   return (

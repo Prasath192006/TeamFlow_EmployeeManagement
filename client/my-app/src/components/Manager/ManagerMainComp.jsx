@@ -13,7 +13,7 @@ export default function ManagerMainComp() {
   return (
     <div>
    
-        <HeaderCont name={name}/>
+        <HeaderCont/>
         
         <Outlet/>
         <Footer />

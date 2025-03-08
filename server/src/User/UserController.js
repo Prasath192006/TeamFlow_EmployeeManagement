@@ -73,9 +73,9 @@
           const {userid,password} = req.query
           const userID = userid
           try{ 
-            console.log("first line of try",userid)
+            console.log("Inside LOGIN API")
               const isuserexist = await AddUserModel.findOne({userID});
-              console.log("before if ",isuserexist)
+              
               if(isuserexist === null){
                 return res.status(500).json({message:"UserID doesn't Exist" , errfrom:"userid"})
               }
@@ -85,15 +85,16 @@
                   return res.status(500).json({message:"Error in Comparing Password" ,errfrom:"BACKEND"});
                 }
                 if(ismatch){
-                  return res.status(202).json({message:"Passkey Matched"})
+                  return res.status(202).json({message:"Passkey Matched",data:isuserexist})
                 }else{
                   return res.status(500).json({message:"Incorrect Password" , errfrom:"password"})
                 } 
               })
-              console.log(userid,passatdb);
+            
           }catch(err){
             return res.status(500).json({message:err})
           }
+         
           
     } 
 

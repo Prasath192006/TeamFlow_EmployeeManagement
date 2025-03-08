@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import HeaderCont from "../HeaderCont.jsx";
 import Footer from "../Footer.jsx";
 import axios from "axios";
+import BackDrop from "../BackDrop.jsx";
+
 import {
   Paper,
   Box,
@@ -31,7 +33,7 @@ export default function AddEmpl() {
     Conpassword: "",
   });
   const [Preview, setPreview] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const [errorMSG, seterrorMSG] = useState({
     emailerr: "Invalid Email",
     emailerrcolor: "#D84040",
@@ -144,6 +146,7 @@ export default function AddEmpl() {
   // SERVER CODE
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     const formdata = new FormData();
     formdata.append("name", formData.fname);
     formdata.append("email", formData.email);
@@ -161,10 +164,12 @@ export default function AddEmpl() {
       .then((res) => {
         console.log(res.data.message);
         alert("Added Successfully!!!");
+        window.history.back();
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const isemailexist = async () => {
@@ -220,6 +225,7 @@ export default function AddEmpl() {
 
   return (
     <Box sx={{ backgroundColor: "#01123eeb", minHeight: "100vh", pb: "8rem" }}>
+      <BackDrop open={loading}  />
       <Box
         component="h2"
         sx={{
