@@ -1,9 +1,11 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const AddUser = require("./User/AddUser.routes");
 const {connectDb} = require("./mongodbConnection.js")
-
+const port = process.env.PORT_NO;
 const app = express();
 app.use(cors())
 connectDb().then(()=>{
@@ -17,7 +19,7 @@ app.use(express.json())
 
  
  
-  app.listen(5000,()=>{
+  app.listen(port,()=>{
       console.log("Server running at PORT:5000")
   })
 

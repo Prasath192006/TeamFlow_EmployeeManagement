@@ -66,7 +66,7 @@
           return res.json({message:"Verified✅",isuseridexist:false});
         }catch(err){
           res.status(500).json({message:"Error in accessing DB"})
-        }
+        } 
     }
 
     const validateLogIn = async(req,res)=>{

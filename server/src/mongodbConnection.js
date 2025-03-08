@@ -1,13 +1,15 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose")
 
-const UserDetails = mongoose.createConnection("mongodb+srv://EmployeeManagementTeamFlow:tf%4012345@c0.t9ucf.mongodb.net/UserDetails?retryWrites=true&w=majority&appName=C0");
-const TaskDetails = mongoose.createConnection("mongodb+srv://EmployeeManagementTeamFlow:tf%4012345@c0.t9ucf.mongodb.net/TaskDetails?retryWrites=true&w=majority&appName=C0");
+const UserDetails = mongoose.createConnection(process.env.MONGO_DB_UserDetails_URI);
+const TaskDetails = mongoose.createConnection(process.env.MONGO_DB_TaskDetails_URI);
 const connectDb= ()=>{
    return new Promise((resolve,reject)=>{
     let userdb = false;
-    let taskdb = false;
+    let taskdb = false; 
 
-    //userDetails
+    //userDetails 
 
     UserDetails.once('open',()=>{
         console.log("Connected to UserDetailsDB")
@@ -18,9 +20,9 @@ const connectDb= ()=>{
     reject("Error in connecting to UserdetailsDb"+err)
     })
 
-    //taskDetails
+    //taskDetails 
 
-    TaskDetails.once('open',()=>{
+    TaskDetails.once('open',()=>{ 
         console.log("Connected to TaskDetailsDB")
         taskdb=true;
         if(userdb && taskdb)
