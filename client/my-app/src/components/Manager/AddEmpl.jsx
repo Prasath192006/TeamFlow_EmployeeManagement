@@ -158,7 +158,7 @@ export default function AddEmpl() {
     formdata.append("image", formData.profilePic);
 
     axios
-      .post("http://localhost:5000/api/LogIN/AddUser", formdata, {
+      .post("https://teamflow-employeemanagement.onrender.com/api/LogIN/AddUser", formdata, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
@@ -175,7 +175,7 @@ export default function AddEmpl() {
   const isemailexist = async () => {
     console.log("isemailexist called");
     axios
-      .get("http://localhost:5000/api/LogIN/isemailexist", {
+      .get("https://teamflow-employeemanagement.onrender.com/api/LogIN/isemailexist", {
         params: { email: formData.email },
       })
       .then((res) => {
@@ -200,7 +200,7 @@ export default function AddEmpl() {
   const isuseridexist = async () => {
     console.log("isuseridexist called");
     axios
-      .get("http://localhost:5000/api/LogIN/isuseridexist", {
+      .get("https://teamflow-employeemanagement.onrender.com/api/LogIN/isuseridexist", {
         params: { userid: formData.empid },
       })
       .then((res) => {
@@ -286,7 +286,7 @@ export default function AddEmpl() {
 
             <Grid container spacing={5}>
               <Grid item xs={12} md={6} spacing={10}>
-                <Box
+                <Box 
                   sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
                 >
                   <TextField
