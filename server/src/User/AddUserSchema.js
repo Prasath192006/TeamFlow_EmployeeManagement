@@ -4,7 +4,7 @@ const addUserSchema = mongoose.Schema(
     {
         name:{
             type:String
-        },
+        }, 
         email:{
             type:String
         },
@@ -29,7 +29,11 @@ const addUserSchema = mongoose.Schema(
                 contentType: String
             },
             default: null 
-        }
+        },
+        logStatus:{
+            type:String,
+            default:"Not Availabe"
+        },
 
     },{
         timestamps:true, 

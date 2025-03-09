@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const AddUser = require("./User/AddUser.routes");
+const taskArea = require("./Task/task.routes.js")
 const {connectDb} = require("./mongodbConnection.js")
 const port = process.env.PORT_NO;
 const app = express();
@@ -14,7 +15,8 @@ connectDb().then(()=>{
 
 //middleware
 app.use(express.json())   
-  app.use("/api/LogIN",AddUser)
+  app.use("/api/Log",AddUser)
+  app.use("/api/task",taskArea)
 
 
  

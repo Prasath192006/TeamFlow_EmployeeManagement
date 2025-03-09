@@ -158,7 +158,7 @@ export default function AddEmpl() {
     formdata.append("image", formData.profilePic);
 
     axios
-      .post("https://teamflow-employeemanagement.onrender.com/api/LogIN/AddUser", formdata, {
+      .post("http://localhost:5000/api/Log/AddUser", formdata, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
@@ -175,7 +175,7 @@ export default function AddEmpl() {
   const isemailexist = async () => {
     console.log("isemailexist called");
     axios
-      .get("https://teamflow-employeemanagement.onrender.com/api/LogIN/isemailexist", {
+      .get("http://localhost:5000/api/Log/isemailexist", {
         params: { email: formData.email },
       })
       .then((res) => {
@@ -200,7 +200,7 @@ export default function AddEmpl() {
   const isuseridexist = async () => {
     console.log("isuseridexist called");
     axios
-      .get("https://teamflow-employeemanagement.onrender.com/api/LogIN/isuseridexist", {
+      .get("http://localhost:5000/api/Log/isuseridexist", {
         params: { userid: formData.empid },
       })
       .then((res) => {

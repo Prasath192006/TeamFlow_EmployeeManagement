@@ -54,15 +54,15 @@ export default function LogIn() {
     bytes.forEach((byte) => (binary += String.fromCharCode(byte)));
     return btoa(binary);
   }
-
+ 
   const handleLogin = async () => {
     setLoading(true);
 
     await axios
-      .get("https://teamflow-employeemanagement.onrender.com/api/LogIN/", {
+      .get("http://localhost:5000/api/Log/", {   
         params: { userid: userid, password: password },
       })
-      .then((res) => {
+      .then((res) => { 
         const userData = {
           userID: res.data.data.userID,
           name: res.data.data.name,

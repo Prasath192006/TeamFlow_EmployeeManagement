@@ -1,4 +1,6 @@
     const AddUserModel = require("./AddUserSchema.js")
+    const EmployeeTaskModel = require("../Task/taskSchema.js")
+
     const bcrypt = require("bcrypt");
 
     const salt = 10;
@@ -6,13 +8,9 @@
         console.log("inside api call");
         const {name,email,password,userID,role,address,salary} = req.body;
         const imageFile = req.file;
-        const isuserIDexist = await AddUserModel.findOne({userID});
-        console.log("is user id exist in add user api",isuserIDexist);
-       // const isemailexist = await AddUserModel.findOne({email});
         try{
-          
-            
                 const hash = await bcrypt.hash(password.toString(),salt);
+                
                 const storedData = await AddUserModel.create({
                     name,
                     email,
@@ -27,9 +25,11 @@
                     }
         
                 })
+                await EmployeeTaskModel.create({userID});
                 res.status(200).json({message:"Stored Successfully",isstored:true})
-            
+                
         }catch(err){
+          console.log("error:",err)
             res.status(500).json({message:"Error in storing DATA",isstored:false})
         }
     
@@ -80,11 +80,12 @@
                 return res.status(500).json({message:"UserID doesn't Exist" , errfrom:"userid"})
               }
               const passatdb = isuserexist.password;
-              bcrypt.compare(password,passatdb,(err,ismatch)=>{
+              bcrypt.compare(password,passatdb,async(err,ismatch)=>{
                 if(err){
                   return res.status(500).json({message:"Error in Comparing Password" ,errfrom:"BACKEND"});
                 }
                 if(ismatch){
+                   await AddUserModel.updateOne({userID},{$set:{logStatus:"Active"}});
                   return res.status(202).json({message:"Passkey Matched",data:isuserexist})
                 }else{
                   return res.status(500).json({message:"Incorrect Password" , errfrom:"password"})
@@ -98,9 +99,21 @@
           
     } 
 
+    const logOutHandle =async(req,res)=>{
+      const {userID} = req.query;
+      const logst = await AddUserModel.updateOne({userID},{$set:{logStatus:"Not Available"}});
+      if(logst){
+        res.status(200).json({message:"BK:logout success"})
+      }
+      else{
+        res.status(200).json({message:"BK:logout failed"})
+      } 
+    }
+
     module.exports = {
         addUser, 
        isemailexist,
         isuseridexist,
-        validateLogIn
+        validateLogIn,
+        logOutHandle
     }

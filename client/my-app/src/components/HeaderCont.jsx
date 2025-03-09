@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { Avatar, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import logo from "../images/logo.png";
@@ -11,8 +12,17 @@ export default function HeaderCont(props)
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/", { replace: true });
-    localStorage.clear();
+     
+    axios.get("http://localhost:5000/api/Log/logout",{params:{userID:storedData.userID}})
+    .then((res)=>{
+      console.log("Log Out Successfull",res.data.message)
+      navigate("/", { replace: true });
+      localStorage.clear();
+    })
+    .catch((err)=>{
+      console.log("Erroe in logout API",err);
+    })
+    
   };
 
   return (

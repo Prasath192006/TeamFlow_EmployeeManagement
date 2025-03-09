@@ -62,7 +62,7 @@ export default function Footer() {
               sx={iconStyles}
             />
             <WhatsAppIcon
-              onClick={() => window.open("https://wa.me/9360120842", "_blank")}
+              onClick={() => window.open("https://wa.me/7010840702", "_blank")}
               sx={iconStyles}
             />
           </Box>

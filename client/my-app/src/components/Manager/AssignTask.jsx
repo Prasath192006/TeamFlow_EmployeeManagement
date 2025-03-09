@@ -31,7 +31,7 @@ export default function AssignTask() {
   const removeItem = (index) => {
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
-
+  
   const assignTask = () => {
     console.log("id:", empid);
     console.log("task:", taskTitle);
