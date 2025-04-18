@@ -7,7 +7,7 @@ import logo from "../images/logo.png";
 export default function HeaderCont(props)
 { 
   
-  const storedData = JSON.parse(localStorage.getItem("data"));
+  const storedData = JSON.parse(sessionStorage.getItem("data"));
   const name = storedData.name; 
   const navigate = useNavigate();
 
@@ -17,7 +17,10 @@ export default function HeaderCont(props)
     .then((res)=>{
       console.log("Log Out Successfull",res.data.message)
       navigate("/", { replace: true });
-      localStorage.clear();
+     // localStorage.clear();
+      //window.name = ""
+      sessionStorage.removeItem("data");
+      console.log("logOut Clicked...");
     })
     .catch((err)=>{
       console.log("Erroe in logout API",err);

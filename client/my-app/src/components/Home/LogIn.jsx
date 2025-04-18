@@ -73,8 +73,8 @@ export default function LogIn() {
           };base64,${arrayBufferToBase64(res.data.data.image.data.data)}`,
         };
 
-        localStorage.setItem("data", JSON.stringify(userData));
-
+        sessionStorage.setItem("data", JSON.stringify(userData));
+        console.log("helloo",userData);
         userid[4] === "M"
           ? navigate(`/Manager/${"M25TF09"}`)
           : navigate(`/Employee/${"E25TF05"}`);

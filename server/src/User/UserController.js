@@ -1,9 +1,10 @@
     const AddUserModel = require("./AddUserSchema.js")
-    const EmployeeTaskModel = require("../Task/taskSchema.js")
+    const {EmployeeTaskModel} = require("../Task/taskSchema.js")
 
     const bcrypt = require("bcrypt");
 
     const salt = 10;
+
     const addUser = async(req,res)=>{
         console.log("inside api call");
         const {name,email,password,userID,role,address,salary} = req.body;
@@ -25,7 +26,7 @@
                     }
         
                 })
-                await EmployeeTaskModel.create({userID});
+                await EmployeeTaskModel.create({assignedTo:userID});
                 res.status(200).json({message:"Stored Successfully",isstored:true})
                 
         }catch(err){
@@ -35,11 +36,10 @@
     
     }
     
-    
-    const isemailexist = async(req,res)=>{
+
+const isemailexist = async(req,res)=>{
         const {email} = req.query;
-          console.log("is email is called")
-          console.log(email)
+          console.log("Verifying emailid...... is called")
           try{
             const isemailexist = await AddUserModel.findOne({email});
             console.log("res:",isemailexist)
@@ -54,7 +54,7 @@
     } 
     const isuseridexist = async(req,res) =>{
         const {userid} = req.query;
-        console.log("is userid is called")
+        console.log("Verifying userid...... is called")
         const userID = userid
         console.log(userID)
 
@@ -99,7 +99,7 @@
           
     } 
 
-    const logOutHandle =async(req,res)=>{
+ const logOutHandle =async(req,res)=>{
       const {userID} = req.query;
       const logst = await AddUserModel.updateOne({userID},{$set:{logStatus:"Not Available"}});
       if(logst){

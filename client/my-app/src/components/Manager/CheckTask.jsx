@@ -1,26 +1,55 @@
 import { Box, Paper, Grid } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Typography,
   FormControlLabel,
   Checkbox,
   TextField,
   Link,
-  Button
+  Button,
 } from "@mui/material";
 import { Tempdata } from "../../App";
+import { useScroll } from "framer-motion";
 
 export default function CheckTask() {
+  const location = useLocation();
+  const taskID = location.state?.taskID;
+  const link = location.state?.Link;
+
+  const [TaskDetails, setTaskDetails] = useState({});
+
+  //SERVER
+  const getTaskDetails = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/task/TaskDetails",
+        {
+          params: { taskID },
+        }
+      );
+      setTaskDetails(res.data);
+    } catch (err) {
+      console.log("ERROR IN GET TASKDETAILS", err);
+    }
+  };
+
+  useEffect(() => {
+    getTaskDetails();
+  }, []);
+
   const userID = "E25TF05";
   const userData = Tempdata.find((id) => id.userid === userID);
   const keysPts = userData.checkList;
-  const link = "https://google.com";
   return (
     <Box
       sx={{
         minHeight: "100vh",
         bgcolor: "#01123eeb",
         color: "aliceblue",
+        display: "flex",
+        flexDirection: "column"
       }}
     >
       <Typography
@@ -39,16 +68,16 @@ export default function CheckTask() {
       <Paper
         elevation={10}
         sx={{
-          margin: { xs: "4vw", md: "5vw" },
+          margin: { xs: "4vw", md: "5vw " },
           borderRadius: "8px",
-          backgroundColor: "rgb(243 248 253)",
+          bgcolor: "rgb(243 248 253)",
           color: "#061523",
           padding: { xs: 2, md: 4 },
         }}
       >
-        {userData.task === "" ? (
+        {!TaskDetails || Object.keys(TaskDetails).length === 0 ? (
           <Typography variant="h6" align="center">
-            Contact Your MANAGER
+            Loading Task Details...
           </Typography>
         ) : (
           <Grid container spacing={3}>
@@ -60,10 +89,10 @@ export default function CheckTask() {
                   fontWeight: "bold",
                 }}
               >
-                {userData.task}
+                {TaskDetails.taskTitle}
               </Typography>
               <Typography variant="subtitle1" sx={{ marginTop: 2 }}>
-                <strong>Description:</strong> {userData.taskDesc}
+                <strong>Description:</strong> {TaskDetails.taskDesc}
               </Typography>
 
               <Typography variant="subtitle1" sx={{ marginTop: 3 }}>
@@ -76,7 +105,7 @@ export default function CheckTask() {
               >
                 {" "}
                 <Typography variant="subtitle1">
-                  {keysPts.map((op) => (
+                  {TaskDetails.keyList.map((op) => (
                     <li key={op}>{op}</li>
                   ))}
                 </Typography>
@@ -90,19 +119,29 @@ export default function CheckTask() {
             >
               <Typography variant="subtitle1" fontWeight="bold">
                 Link:
-                <Link href={link} underline="hover" target="_blank">
+                <Link
+                  href={link}
+                  underline="hover"
+                  target="_blank"
+                  sx={{ wordBreak: "break-all" }}
+                >
                   {link}
                 </Link>
               </Typography>
             </Grid>
+            <Button
+              variant="contained"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                margin: " 3rem auto 1.2rem  auto ",
+                width: "10rem",
+              }}
+            >
+              VERIFIED
+            </Button>
           </Grid>
         )}
-       
-        <Button variant="contained" sx={{ display:"flex", justifyContent:"center", margin:" 3rem auto 1.2rem  auto ", width:"10rem"}}>
-            VERIFIED
-          </Button>
-        
-        
       </Paper>
     </Box>
   );

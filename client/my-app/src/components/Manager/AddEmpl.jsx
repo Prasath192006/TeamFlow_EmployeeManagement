@@ -34,6 +34,7 @@ export default function AddEmpl() {
   });
   const [Preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [errorMSG, seterrorMSG] = useState({
     emailerr: "Invalid Email",
     emailerrcolor: "#D84040",
@@ -41,29 +42,23 @@ export default function AddEmpl() {
     useriderrcolor: "#D84040",
   });
 
+// Verifying from server
   const [verify, setverify] = useState({
     email: false,
     userid: false,
   });
 
+  // Verifying format of Email,Userid
   const [formatverification, setformatverification] = useState({
     verifyEmail: false,
     verifyPass: false,
     verifyEmpID: false,
   });
-
-  const [showPass, setShowPass] = useState(false);
-  const [showConPass, setShowConPass] = useState(false);
-
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validateEmpID = (empid) => /^TF\d{2}[ME]\d{4}$/.test(empid);
-  const handleFormData = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleValidation = (e) => {
     const { name, value } = e.target;
-
+    
     if (name === "email") {
       seterrorMSG((prev) => ({
         ...prev,
@@ -120,6 +115,25 @@ export default function AddEmpl() {
     }
   };
 
+  //Handeling VisibliyIcon
+  const [showPass, setShowPass] = useState(false);
+  const [showConPass, setShowConPass] = useState(false);
+
+//Enable/Disable Handling
+  useEffect(() => {
+   
+    const allFieldsFilled = Object.values(formData).every((val) => val !== "");
+    const passwordsMatch = formData.password === formData.Conpassword;
+    setIsFormValid(allFieldsFilled && passwordsMatch &&verify.email  && verify.userid && formData.profilePic != null);
+  }, [formData,verify]);
+
+  
+  const handleFormData = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+
+//reseting Form
   const resetForm = () => {
     setFormData({
       fname: "",
@@ -136,6 +150,7 @@ export default function AddEmpl() {
     setformatverification({ verifyEmail: false, verifyPass: false });
   };
 
+  //handeling Profile Image
   const handleimage = (e) => {
     const file = e.target.files[0];
 
@@ -166,7 +181,7 @@ export default function AddEmpl() {
         alert("Added Successfully!!!");
         window.history.back();
       })
-      .catch((err) => {
+      .catch((err) => { 
         console.log(err);
       })
       .finally(() => setLoading(false));
@@ -475,7 +490,7 @@ export default function AddEmpl() {
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
-                disabled={!Object.values(verify).every((val) => val)}
+                disabled={!isFormValid}
               >
                 {console.log(Object.values(verify))}
                 Create Employee
