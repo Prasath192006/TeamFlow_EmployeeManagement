@@ -37,7 +37,7 @@ export default function Employee() {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/task/getTask",
+          "https://teamflow-employeemanagement.onrender.com/api/task/getTask",
           { params: { userID: data.userID } }
         );
 
@@ -109,7 +109,7 @@ export default function Employee() {
 
     alert(JSON.stringify(data))
 
-    await axios.post("http://localhost:5000/api/task/verifyTask",data)
+    await axios.post("https://teamflow-employeemanagement.onrender.com/api/task/verifyTask",data)
     .then((res)=>{
       console.log(res.data.message);
     })

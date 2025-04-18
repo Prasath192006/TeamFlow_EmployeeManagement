@@ -56,7 +56,7 @@ export default function AssignTask() {
   const isuseridexist = async () => {
     console.log("isuseridexist called");
     axios
-      .get("http://localhost:5000/api/Log/isuseridexist", {
+      .get("https://teamflow-employeemanagement.onrender.com/api/Log/isuseridexist", {
         params: { userid: empid },
       })
       .then((res) => {
@@ -95,7 +95,7 @@ export default function AssignTask() {
       assignedTo: empid,
     };
     axios
-      .post("http://localhost:5000/api/task/assignTask", data, {
+      .post("https://teamflow-employeemanagement.onrender.com/api/task/assignTask", data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {

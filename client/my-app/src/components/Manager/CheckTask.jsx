@@ -24,7 +24,7 @@ export default function CheckTask() {
   const getTaskDetails = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/task/TaskDetails",
+        "https://teamflow-employeemanagement.onrender.com/api/task/TaskDetails",
         {
           params: { taskID },
         }

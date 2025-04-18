@@ -81,7 +81,7 @@ export default function Manager() {
 
    const getVerficationStatus = async()=>{
     try{
-      const res = await axios.get("http://localhost:5000/api/task/VerificationStatus")
+      const res = await axios.get("https://teamflow-employeemanagement.onrender.com/api/task/VerificationStatus")
       .then((res)=>{
         setverificationData(res.data)
       })
@@ -96,7 +96,7 @@ export default function Manager() {
       try {
         console.log("inside fetchEmployeeStatus");
         const res = await axios.get(
-          "http://localhost:5000/api/task/employeeStatus"
+          "https://teamflow-employeemanagement.onrender.com/api/task/employeeStatus"
         );
         setLoading(false);
         if (res.data?.data) {

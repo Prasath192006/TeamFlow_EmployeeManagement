@@ -13,7 +13,7 @@ export default function HeaderCont(props)
 
   const handleLogout = () => {
      
-    axios.get("http://localhost:5000/api/Log/logout",{params:{userID:storedData.userID}})
+    axios.get("https://teamflow-employeemanagement.onrender.com/api/Log/logout",{params:{userID:storedData.userID}})
     .then((res)=>{
       console.log("Log Out Successfull",res.data.message)
       navigate("/", { replace: true });

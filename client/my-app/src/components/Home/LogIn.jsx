@@ -59,7 +59,7 @@ export default function LogIn() {
     setLoading(true);
 
     await axios
-      .get("http://localhost:5000/api/Log/", {   
+      .get("https://teamflow-employeemanagement.onrender.com/api/Log/", {   
         params: { userid: userid, password: password },
       })
       .then((res) => { 
