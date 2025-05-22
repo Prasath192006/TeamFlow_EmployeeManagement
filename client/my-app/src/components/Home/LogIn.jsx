@@ -127,13 +127,14 @@ export default function LogIn() {
           <motion.img
             src={logo}
             alt="LOGO"
-            style={{ borderRadius: "10px" }}
+            style={{ borderRadius: "10px" ,marginTop: "-12vw" , marginBottom:"-4vw"}}
             initial={{ opacity: 0, y: -100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
-            width="60%"
+            width="80%"
             height="auto"
+            
           />
 
           <motion.div
