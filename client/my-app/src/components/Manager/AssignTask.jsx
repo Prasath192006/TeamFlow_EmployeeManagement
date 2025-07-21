@@ -54,13 +54,11 @@ export default function AssignTask() {
   //validate the user id
 
   const isuseridexist = async () => {
-    console.log("isuseridexist called");
     axios
       .get("https://teamflow-employeemanagement.onrender.com/api/Log/isuseridexist", {
         params: { userid: empid },
       })
       .then((res) => {
-        console.log(res.data);
         if (res.data.isuseridexist) {
           setvalidateUserID((prev) => ({
             ...prev,
@@ -85,7 +83,9 @@ export default function AssignTask() {
   };
 
   const assignTask = () => {
-    const managerData = JSON.parse(localStorage.getItem("data"));
+
+    const managerData = JSON.parse(sessionStorage.getItem("data"));
+  
     const data = {
       taskTitle: taskTitle,
       taskDesc: taskDesc,
@@ -94,12 +94,12 @@ export default function AssignTask() {
       assignedBy: { MuserID: managerData.userID, Mname: managerData.name },
       assignedTo: empid,
     };
-    axios
-      .post("https://teamflow-employeemanagement.onrender.com/api/task/assignTask", data, {
+   
+    
+    axios.post("https://teamflow-employeemanagement.onrender.com/api/task/assignTask", data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
-        console.log("AssignTask:", res.data);
       })
       .catch((err) => {
         console.log("Error in assignTask api", err);

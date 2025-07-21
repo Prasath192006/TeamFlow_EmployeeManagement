@@ -42,8 +42,7 @@ const isemailexist = async(req,res)=>{
           console.log("Verifying emailid...... is called")
           try{
             const isemailexist = await AddUserModel.findOne({email});
-            console.log("res:",isemailexist)
-            if(isemailexist){
+              if(isemailexist){
                 return res.json({message:"Email ID already exist",isemailexist:true});
             }
             return res.json({message:"Verified✅",isemailexist:false});
@@ -56,7 +55,6 @@ const isemailexist = async(req,res)=>{
         const {userid} = req.query;
         console.log("Verifying userid...... is called")
         const userID = userid
-        console.log(userID)
 
         try{
           const isuseridexist = await AddUserModel.findOne({userID});

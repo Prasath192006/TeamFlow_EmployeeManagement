@@ -51,7 +51,7 @@ const TaskListSchema = mongoose.Schema(
       default: null,
     },
     verifiedOn: {
-      type: String,
+      type: Date,
       default: null,
     },
   },

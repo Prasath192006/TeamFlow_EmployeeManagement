@@ -97,7 +97,6 @@ export default function AddEmpl() {
         ...prev,
         userid: false,
       }));
-      console.log("usrisd:value", useridverify, value);
       if (!useridverify) {
         seterrorMSG((prev) => ({
           ...prev,
@@ -177,7 +176,6 @@ export default function AddEmpl() {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res.data.message);
         alert("Added Successfully!!!");
         window.history.back();
       })
@@ -188,13 +186,11 @@ export default function AddEmpl() {
   };
 
   const isemailexist = async () => {
-    console.log("isemailexist called");
     axios
       .get("https://teamflow-employeemanagement.onrender.com/api/Log/isemailexist", {
         params: { email: formData.email },
       })
       .then((res) => {
-        console.log(res.data);
         if (!res.data.isemailexist) {
           seterrorMSG((prev) => ({
             ...prev,
@@ -213,13 +209,11 @@ export default function AddEmpl() {
       });
   };
   const isuseridexist = async () => {
-    console.log("isuseridexist called");
     axios
       .get("https://teamflow-employeemanagement.onrender.com/api/Log/isuseridexist", {
         params: { userid: formData.empid },
       })
       .then((res) => {
-        console.log(res.data);
         if (!res.data.isuseridexist) {
           seterrorMSG((prev) => ({
             ...prev,
@@ -492,7 +486,6 @@ export default function AddEmpl() {
                 onClick={handleSubmit}
                 disabled={!isFormValid}
               >
-                {console.log(Object.values(verify))}
                 Create Employee
               </Button>
             </Box>

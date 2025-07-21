@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const AddUser = require("./User/AddUser.routes");
-const taskArea = require("./Task/task.routes.js")
+const taskArea = require("./Task/task.routes.js");
+const History = require("./History/history.routes.js");
 const {connectDb} = require("./mongodbConnection.js")
 const port = process.env.PORT_NO;
 const app = express();
@@ -17,17 +18,18 @@ connectDb().then(()=>{
 app.use(express.json())   
   app.use("/api/Log",AddUser)
   app.use("/api/task",taskArea)
+  app.use("/api/history",History)
 
 
  
  
   app.listen(port,()=>{
-      console.log("Server running at PORT:5000")
+      console.log("Server running at PORT:5000") 
   })
 
 }).catch((err) => {
   console.error('Failed to connect to databases:', err);
-});
+}); 
 
 
 

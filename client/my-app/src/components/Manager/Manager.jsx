@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import axios from "axios";
 import { Tempdata } from "../../App.jsx";
 import BackDrop from "../BackDrop.jsx";
+import ManagerHistory from "./ManagerHistory.jsx";
+import { useOutletContext } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -29,6 +31,48 @@ export default function Manager() {
 
   const { userID } = useParams();
 
+  //HISTORY
+  const location = useLocation();
+  const { triggerHistory } = useOutletContext();
+  const [showHistory, setShowHistory] = useState(false);
+  useEffect(() => {
+    if (triggerHistory > 0) {
+      setShowHistory((prev) => !prev);
+    }
+  }, [triggerHistory]);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("showHistory") === "true") {
+      setShowHistory(true); // ✅ always show, never toggle
+      setTimeout(() => {
+        const section = document.getElementById("manager-work-history");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  }, [location.search]);
+
+  //Scroll AFTER it becomes visible
+  useEffect(() => {
+    if (showHistory) {
+      const section = document.getElementById("manager-work-history");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [showHistory]); // runs after it's rendered
+
+    useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const sectionID = params.get("scrollTo");
+
+    if (sectionID) {
+      setTimeout(() => {
+        const section = document.getElementById(sectionID);
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      }, 300); // small delay to ensure DOM rendered
+    }
+  }, [location.search]);
+
   //loading
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +84,6 @@ export default function Manager() {
 
   const userData = JSON.parse(sessionStorage.getItem("data"));
   if (!userData) {
-    console.log(userID, "sds");
     return <Typography>User not found.</Typography>;
   }
   const [completedTasks, setCompletedTasks] = useState(
@@ -79,46 +122,44 @@ export default function Manager() {
   });
   const [verificationData, setverificationData] = useState([]);
 
-   const getVerficationStatus = async()=>{
-    try{
-      const res = await axios.get("https://teamflow-employeemanagement.onrender.com/api/task/VerificationStatus")
-      .then((res)=>{
-        setverificationData(res.data)
-      })
-
-    }catch(err){ 
-      console.log("Error in getting verfication status",err);
-
+  const getVerficationStatus = async () => {
+    try {
+      const userData = JSON.parse(sessionStorage.getItem("data"));
+      await axios
+        .get("https://teamflow-employeemanagement.onrender.com/api/task/VerificationStatus", {
+          params: { userID: userData.userID },
+        })
+        .then((res) => {
+          setverificationData(res.data);
+        });
+    } catch (err) {
+      console.log("Error in getting verfication status", err);
     }
-   }
+  };
 
-    const fetchEmployeeStatus = async () => {
-      try {
-        console.log("inside fetchEmployeeStatus");
-        const res = await axios.get(
-          "https://teamflow-employeemanagement.onrender.com/api/task/employeeStatus"
-        );
-        setLoading(false);
-        if (res.data?.data) {
-          const newData = res.data.data;
-          const existingData = sessionStorage.getItem("employeeStats");
-          const parsedExistingData = existingData
-            ? JSON.parse(existingData)
-            : [];
+  const fetchEmployeeStatus = async () => {
+    try {
+      const res = await axios.get(
+        "https://teamflow-employeemanagement.onrender.com/api/task/employeeStatus"
+      );
+      setLoading(false);
+      if (res.data?.data) {
+        const newData = res.data.data;
+        const existingData = sessionStorage.getItem("employeeStats");
+        const parsedExistingData = existingData ? JSON.parse(existingData) : [];
 
-          if (JSON.stringify(newData) !== JSON.stringify(parsedExistingData)) {
-            console.log("inside if");
-            sessionStorage.setItem("employeeStats", JSON.stringify(newData));
-            
-            setserverData(newData);
-          }
-        } else {
-          console.warn("No valid data received from API");
+        if (JSON.stringify(newData) !== JSON.stringify(parsedExistingData)) {
+          sessionStorage.setItem("employeeStats", JSON.stringify(newData));
+
+          setserverData(newData);
         }
-      } catch (err) {
-        console.error("Error in getting employee status:", err);
+      } else {
+        console.warn("No valid data received from API");
       }
-    };
+    } catch (err) {
+      console.error("Error in getting employee status:", err);
+    }
+  };
 
   useEffect(() => {
     fetchEmployeeStatus();
@@ -187,8 +228,13 @@ export default function Manager() {
           </Box>
         </Grid>
       </Grid>
-
+      {showHistory && (
+        <section id="manager-work-history">
+          <ManagerHistory />
+        </section>
+      )}
       <Typography
+        id="task-verification-section"
         variant="h4"
         textAlign="center"
         sx={{ my: { xs: 3, md: 5 }, fontFamily: '"Sansita", serif' }}
@@ -227,22 +273,35 @@ export default function Manager() {
           <TableBody>
             {verificationData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((empl, index) => (
+              .map((verifyData, index) => (
                 <TableRow key={index}>
                   <TableCell align="center">
                     {page * rowsPerPage + index + 1}
                   </TableCell>
-                  <TableCell align="center">{empl.emplName}</TableCell>
-                  <TableCell align="center">{empl.taskDescription}</TableCell>
-                  <TableCell align="center">{empl.assignedDate}</TableCell>
-                  <TableCell align="center">{empl.completedOn}</TableCell>
+                  <TableCell align="center">{verifyData.emplName}</TableCell>
+                  <TableCell align="center">
+                    {verifyData.taskDescription}
+                  </TableCell>
+                  <TableCell align="center">
+                    {dayjs(verifyData.assignedDate).format("DD-MM-YYYY HH:mm")}
+                  </TableCell>
+                  <TableCell align="center">
+                    {dayjs(verifyData.completedOn).format("DD-MM-YYYY HH:mm")}
+                  </TableCell>
                   <TableCell align="center">
                     <Button
                       variant="contained"
                       color="success"
                       fullWidth
-                      onClick={() => navigate("CheckTask", { state: { taskID: empl.taskID , Link :empl.link } })}
-                      >
+                      onClick={() =>
+                        navigate("CheckTask", {
+                          state: {
+                            taskID: verifyData.taskID,
+                            Link: verifyData.link,
+                          },
+                        })
+                      }
+                    >
                       CHECK
                     </Button>
                   </TableCell>
@@ -271,6 +330,7 @@ export default function Manager() {
       </TableContainer>
 
       <Typography
+        id="employee-status-section"
         variant="h4"
         textAlign="center"
         sx={{ my: { xs: 3, md: 7 }, fontFamily: '"Sansita", serif' }}
@@ -341,7 +401,7 @@ export default function Manager() {
               .slice(
                 pageEMP * rowsPerPageEMP,
                 pageEMP * rowsPerPageEMP + rowsPerPageEMP
-              ) // ✅ Apply pagination correctly
+              ) //Apply pagination
               .map(
                 ({
                   userID,
@@ -372,14 +432,8 @@ export default function Manager() {
                     )}
 
                     {/* Task Column */}
-                    <TableCell align="center">
-                      {task ? task.taskTitle : "No Tasks Assigned"}
-                    </TableCell>
-                    <TableCell align="center">
-                      {task?.dueDate
-                        ? dayjs(task.dueDate).format("DD-MM-YYYY")
-                        : "N/A"}
-                    </TableCell>
+                    <TableCell align="center">{task.taskTitle}</TableCell>
+                    <TableCell align="center">{task.dueDate}</TableCell>
 
                     {taskIndex === 0 && (
                       <TableCell
@@ -399,11 +453,9 @@ export default function Manager() {
           {/* Left-side Button */}
           <Button
             variant="contained"
-            sx={{ cursor: "pointer" ,m:" 1vw 0 1vw 2vw" }}
+            sx={{ cursor: "pointer", m: " 1vw 0 1vw 2vw" }}
             onClick={() => {
-              fetchEmployeeStatus()
-              alert("clicked");
-
+              fetchEmployeeStatus();
             }}
           >
             Refresh

@@ -16,6 +16,7 @@ import {
 import Footer from "../Footer.jsx";
 import { Tempdata } from "../../App.jsx";
 import Timer from "../Timer.jsx";
+import EmployeeHistory from "./EmployeeHistory.jsx";
 
 export default function Employee() {
   const userData = JSON.parse(sessionStorage.getItem("data"));
@@ -49,14 +50,14 @@ export default function Employee() {
         response.data.serverData.forEach((task) => {
           initialCheckStatus[task.taskTitle] = task.keyList.reduce(
             (acc, key) => ({ ...acc, [key]: task.completedOn ? true : false }),
-            {} 
+            {}
           );
           initialLinkInputs[task.taskTitle] = ""; // Empty link initially
         });
 
         setCheckStatus(initialCheckStatus);
         setLinkInputs(initialLinkInputs);
-        console.log(initialCheckStatus, initialLinkInputs);
+        
       } catch (error) {
         console.error("Error in accessing Server...", error);
       }
@@ -94,30 +95,38 @@ export default function Employee() {
     return allChecked && linkProvided;
   };
 
+  //HISTORY
+  const [showHistory, setShowHistory] = useState(false);
+
+  const handleShowHistory = () => {
+    setShowHistory((prev) => !prev);
+  };
+
   //Server
 
-  const handleOnComplete = async(id,taskTitle,task) => {
+  const handleOnComplete = async (id, taskTitle, task) => {
     const data = {
-      managerID:task.assignedBy.MuserID,
-      taskID : task._id,
-      emplDetails:{
-             EmpName:userData.name,
-             EmpID:userData.userID
+      managerID: task.assignedBy.MuserID,
+      taskID: task._id,
+      emplDetails: {
+        EmpName: userData.name,
+        EmpID: userData.userID,
       },
-      link:linkInputs[task.taskTitle]
-    }
+      link: linkInputs[task.taskTitle],
+    };
 
-    alert(JSON.stringify(data))
+    
 
-    await axios.post("https://teamflow-employeemanagement.onrender.com/api/task/verifyTask",data)
-    .then((res)=>{
-      console.log(res.data.message);
-    })
-    .catch((err)=>{
-      console.log("Error in handleOnComplete api call",err)
-    })
+    await axios
+      .post("https://teamflow-employeemanagement.onrender.com/api/task/TaskCompleted", data)
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        console.log("Error in handleOnComplete api call", err);
+      });
   };
-        
+
   return (
     <Box
       sx={{
@@ -126,7 +135,7 @@ export default function Employee() {
         minHeight: "100vh",
       }}
     >
-      <HeaderCont />
+      <HeaderCont onShowHistory={handleShowHistory} />
 
       <Grid
         container
@@ -152,7 +161,6 @@ export default function Employee() {
           <Avatar
             src={userData.image}
             alt="Profile"
-            
             sx={{ width: { xs: 100, md: 200 }, height: { xs: 100, md: 200 } }}
           />
         </Grid>
@@ -170,6 +178,8 @@ export default function Employee() {
         <Grid item md={3}></Grid>
       </Grid>
 
+      {showHistory ? <EmployeeHistory /> : " "}
+      <Box id="tasks-section">
       <Typography
         variant="h4"
         textAlign="center"
@@ -185,6 +195,7 @@ export default function Employee() {
       ) : (
         serverData.map((task) => (
           <Paper
+
             key={task.taskTitle}
             elevation={10}
             sx={{
@@ -198,18 +209,7 @@ export default function Employee() {
             <Grid container spacing={3}>
               {/* Task Details */}
               <Grid item xs={12} md={8}>
-                {task.verifiedOn ? 
-                  <Typography
-                 sx={{
-                  fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
-                  fontWeight: "bold",
-                  color:"#01123eeb",
-                  disabled:true
-                }}>
-                  Verification Status:
-                  </Typography>
-                 :""}
-              
+
                 <Typography
                   variant="h6"
                   sx={{
@@ -289,16 +289,13 @@ export default function Employee() {
                   onChange={(e) => handleLinkChange(e, task.taskTitle)}
                   disabled={task.completedOn ? true : false}
                 />
-              
               </Grid>
-                <Typography
-                  
-                  textAlign="center"
-                  sx={{ marginTop: 4, marginLeft:3, 
-                    fontWeight: "bold", }}
-                >
-                  Assigned By:{task.assignedBy.Mname} [{task.assignedBy.MuserID}]
-                </Typography>
+              <Typography
+                textAlign="center"
+                sx={{ marginTop: 4, marginLeft: 3, fontWeight: "bold" }}
+              >
+                Assigned By:{task.assignedBy.Mname} [{task.assignedBy.MuserID}]
+              </Typography>
 
               {/* Complete Button */}
               <Grid
@@ -308,18 +305,28 @@ export default function Employee() {
               >
                 <Button
                   variant="contained"
-                  disabled={!isTaskComplete(task.taskTitle, task.keyList) || task.completedOn ? true : false}
+                  disabled={
+                    !isTaskComplete(task.taskTitle, task.keyList) ||
+                    task.completedOn
+                      ? true
+                      : false
+                  }
                   sx={{ width: { xs: "80vw", sm: "60vw", md: "40vw" } }}
                   id={task.taskTitle}
-                  onClick={() => handleOnComplete(task._id,task.taskTitle,task)}
+                  onClick={() =>
+                    handleOnComplete(task._id, task.taskTitle, task)
+                  }
                 >
                   Completed
                 </Button>
               </Grid>
             </Grid>
           </Paper>
+          
         ))
+        
       )}
+      </Box>
 
       <Footer />
     </Box>

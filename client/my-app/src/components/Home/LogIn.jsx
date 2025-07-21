@@ -27,10 +27,9 @@ export default function LogIn() {
   const getData = (userId) => Tempdata.find((it) => it.userid === userId);
 
   const handleHintBtn = () => {
-    console.log("btn called");
     if (hint !== "") {
       setHint("");
-    } else setHint('manager- userid:"TF25M1234", password:123456789 , Employee- userid:"TF25E1234" password:123456789');
+    } else setHint('manager- userid:"TF25M5001", password:12345678 , Employee- userid:"TF25E1001" password:12345678');
   };
   const [handleErr, sethandleErr] = useState({
     useridErr: false,
@@ -57,12 +56,14 @@ export default function LogIn() {
  
   const handleLogin = async () => {
     setLoading(true);
+    
 
     await axios
       .get("https://teamflow-employeemanagement.onrender.com/api/Log/", {   
         params: { userid: userid, password: password },
       })
       .then((res) => { 
+        
         const userData = {
           userID: res.data.data.userID,
           name: res.data.data.name,
@@ -76,10 +77,11 @@ export default function LogIn() {
         sessionStorage.setItem("data", JSON.stringify(userData));
         console.log("helloo",userData);
         userid[4] === "M"
-          ? navigate(`/Manager/${"M25TF09"}`)
-          : navigate(`/Employee/${"E25TF05"}`);
+          ? navigate(`/Manager/${userid}`)
+          : navigate(`/Employee/${userid}`);
       })
       .catch((err) => {
+        
         if (err.response) {
           console.log(err.response.data.message);
           const errType = err.response.data.errfrom;

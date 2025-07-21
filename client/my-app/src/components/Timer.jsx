@@ -28,7 +28,6 @@ const CountdownTimer = ({ dueDate }) => {
   });
   
   const timerComponents = [];
-//  console.log(timeLeft.days)
   if(timeLeft.days > 0){
     timerComponents.push(
       timeLeft.days + ' days left'

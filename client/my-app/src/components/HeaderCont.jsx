@@ -2,30 +2,31 @@ import React from "react";
 import axios from "axios";
 import { Avatar, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import logo from "../images/logo.png";
+import Sidebar from "./Sidebar.jsx";
 
-export default function HeaderCont(props)
-{ 
-  
+export default function HeaderCont(props) {
   const storedData = JSON.parse(sessionStorage.getItem("data"));
-  const name = storedData.name; 
+  const name = storedData.name;
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   const handleLogout = () => {
-     
-    axios.get("https://teamflow-employeemanagement.onrender.com/api/Log/logout",{params:{userID:storedData.userID}})
-    .then((res)=>{
-      console.log("Log Out Successfull",res.data.message)
-      navigate("/", { replace: true });
-     // localStorage.clear();
-      //window.name = ""
-      sessionStorage.removeItem("data");
-      console.log("logOut Clicked...");
-    })
-    .catch((err)=>{
-      console.log("Erroe in logout API",err);
-    })
-    
+    axios
+      .get("https://teamflow-employeemanagement.onrender.com/api/Log/logout", {
+        params: { userID: storedData.userID },
+      })
+      .then((res) => {
+        navigate("/", { replace: true });
+        sessionStorage.removeItem("data");
+      })
+      .catch((err) => {
+        console.log("Error in logout API", err);
+      });
   };
 
   return (
@@ -42,12 +43,14 @@ export default function HeaderCont(props)
       }}
     >
       {/* Logo & Brand Name */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 } }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 } }}
+      >
         <Avatar
           alt="Gravis Howard"
           src={logo}
           variant="square"
-          sx={{ width: { xs: 32, md: 45 }, height: { xs: 32, md: 45 } , }}
+          sx={{ width: { xs: 32, md: 45 }, height: { xs: 32, md: 45 } }}
         />
         <Typography
           variant="h5"
@@ -73,23 +76,40 @@ export default function HeaderCont(props)
           sx={{
             fontFamily: '"Sansita", serif',
             fontSize: { xs: "18px", md: "35px" },
-            display: { xs: "none", sm: "block" }, 
+            display: { xs: "none", sm: "block" },
           }}
         >
           {name}
         </Typography>
         <Avatar
+          onClick={handleDrawerOpen}
           sx={{
             bgcolor: "aliceblue",
             color: "#1a1a33",
             width: { xs: 30, md: 40 },
             height: { xs: 30, md: 40 },
             fontSize: { xs: "14px", md: "18px" },
+            margin: { md: "0 -20vw 0 0", xs: "0 -73vw 0 0" },
           }}
         >
           {name[0]}
         </Avatar>
-        <Button
+
+        {/* //SideBar */}
+        <Sidebar
+          open={open}
+          handleClose={handleDrawerClose}
+          onHistoryClick={() => {
+            props.onShowHistory();
+            //setOpen(false);
+          }}
+          onLogoutClick={() => {
+            handleLogout();
+          }}
+          onManagerHistoryClick={props.onManagerHistoryClick}
+        />
+
+        {/* <Button
           variant="contained"
           onClick={handleLogout}
           sx={{
@@ -99,7 +119,7 @@ export default function HeaderCont(props)
           }}
         >
           Logout
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );

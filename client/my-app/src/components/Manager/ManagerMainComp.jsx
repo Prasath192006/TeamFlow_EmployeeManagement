@@ -1,21 +1,24 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { useParams,Outlet } from "react-router-dom";
 import HeaderCont from "../HeaderCont";
 import Footer from "../Footer";
-import Manager from "./Manager";
-import AddEmpl from "./AddEmpl";
-import AssignTask from "./AssignTask";
 export default function ManagerMainComp() {
-  const { userID } = useParams();
-  // BK to fetch name using Id
-  const name = "Alice";
+ const [triggerHistory, setTriggerHistory] = useState(0);
+
+  // Function Sidebar will call
+  const handleManagerHistoryClick = () => {
+    setTriggerHistory(prev => prev + 1); // toggle
+  };
   return (
     <div>
    
-        <HeaderCont/>
-        
-        <Outlet/>
+        {/* Pass handler to HeaderCont → Sidebar */}
+      <HeaderCont onManagerHistoryClick={handleManagerHistoryClick} />
+
+      {/*  Pass trigger as context/state to Manager */}
+      <Outlet context={{ triggerHistory }} />
+
         <Footer />
    
     </div>

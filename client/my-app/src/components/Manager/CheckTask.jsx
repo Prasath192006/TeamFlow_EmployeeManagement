@@ -2,6 +2,7 @@ import { Box, Paper, Grid } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   FormControlLabel,
@@ -14,6 +15,7 @@ import { Tempdata } from "../../App";
 import { useScroll } from "framer-motion";
 
 export default function CheckTask() {
+    const navigate = useNavigate();
   const location = useLocation();
   const taskID = location.state?.taskID;
   const link = location.state?.Link;
@@ -35,13 +37,25 @@ export default function CheckTask() {
     }
   };
 
+  const TaskVerified = async () =>{
+       try {
+      const res = await axios.get(
+        "https://teamflow-employeemanagement.onrender.com/api/task/TaskVerified",
+        {
+          params: {taskID:taskID},
+        }
+      );
+      navigate(-1);
+      
+    } catch (err) {
+      console.log("ERROR IN UPDATING VERIFIED TASK", err);
+    }
+  }
+
   useEffect(() => {
     getTaskDetails();
   }, []);
 
-  const userID = "E25TF05";
-  const userData = Tempdata.find((id) => id.userid === userID);
-  const keysPts = userData.checkList;
   return (
     <Box
       sx={{
@@ -131,7 +145,9 @@ export default function CheckTask() {
             </Grid>
             <Button
               variant="contained"
+              onClick={TaskVerified}
               sx={{
+              
                 display: "flex",
                 justifyContent: "center",
                 margin: " 3rem auto 1.2rem  auto ",
