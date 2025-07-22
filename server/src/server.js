@@ -34,7 +34,7 @@ app.use(express.json())
 
 
 //mongoose
-// mongoose.connect("mongodb+srv://EmployeeManagementTeamFlow:tf%4012345@c0.t9ucf.mongodb.net/UserDetails?retryWrites=true&w=majority&appName=C0")
+// mongoose.connect("##############################################")
 // .then(() => {
 //     console.log("MongoDB connected successfully");
 //   })
