@@ -70,28 +70,30 @@ TeamFlow/
 ```bash
 git clone https://github.com/your-username/teamflow.git
 cd teamflow
+```
 
-
-2️⃣ Backend Setup
-
+###2️⃣ Backend Setup
+```
 cd server
 npm install
-
+```
 
 Create a .env file inside server/ and add:
-
+```
 MONGO_URI=your_mongodb_atlas_uri
 PORT=5000
-
+```
 
 Run the server:
-
+```
 npm start
-
+```
 3️⃣ Frontend Setup
+```
 cd client
 npm install
 npm start
+```
 
 
 🧑‍💻 Contributor
