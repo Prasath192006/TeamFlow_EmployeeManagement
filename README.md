@@ -1,7 +1,6 @@
 # 📌 TeamFlow - Employee Task & Team Management  
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)  
-![License](https://img.shields.io/badge/license-MIT-blue)  
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=white)  
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js&logoColor=white)  
 ![Express](https://img.shields.io/badge/Framework-Express-000000?logo=express&logoColor=white)  
@@ -46,4 +45,57 @@
 ---
 
 ## 📂 Project Structure  
+TeamFlow/
+│── client/ # React frontend
+│ ├── src/
+│ │ ├── components/ # Reusable UI components
+│ │ ├── pages/ # Main pages (Dashboard, Login, etc.)
+│ │ ├── utils/ # Helper functions & API calls
+│ │ └── App.js
+│── server/ # Express backend
+│ ├── models/ # Mongoose schemas (TaskList, EmplTask, VerifyTask, User)
+│ ├── routes/ # API routes
+│ ├── controllers/ # Business logic
+│ ├── middleware/ # Validation & error handling
+│ └── server.js
+│── package.json
+│── README.md
+
+
+---
+
+## ⚡ Installation & Setup  
+
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/your-username/teamflow.git
+cd teamflow
+
+
+2️⃣ Backend Setup
+
+cd server
+npm install
+
+
+Create a .env file inside server/ and add:
+
+MONGO_URI=your_mongodb_atlas_uri
+PORT=5000
+
+
+Run the server:
+
+npm start
+
+3️⃣ Frontend Setup
+cd client
+npm install
+npm start
+
+
+🧑‍💻 Contributor
+
+Prasath (MERN developer, database & backend integration)
+
 
