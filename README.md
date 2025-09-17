@@ -45,6 +45,7 @@
 ---
 
 ## 📂 Project Structure  
+
 TeamFlow/
 │── client/ # React frontend
 │ ├── src/
@@ -72,7 +73,7 @@ git clone https://github.com/your-username/teamflow.git
 cd teamflow
 ```
 
-###2️⃣ Backend Setup
+2️⃣ Backend Setup
 ```
 cd server
 npm install
