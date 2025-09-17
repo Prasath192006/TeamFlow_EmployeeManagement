@@ -8,7 +8,7 @@
 ![Netlify](https://img.shields.io/badge/Deployed%20On-Netlify-00C7B7?logo=netlify&logoColor=white)  
 ![Heroku](https://img.shields.io/badge/Backend%20API-Heroku-430098?logo=heroku&logoColor=white)  
 
-🔗 **Live Demo**: [Frontend (Netlify)](https://your-netlify-link.com) | [Backend (Heroku)](https://your-heroku-link.com)  
+🔗 **Live Demo**: [Frontend (Netlify)]([https://your-netlify-link.com](https://teamfloworg.netlify.app/))
 
 ---
 
